@@ -1,0 +1,3 @@
+
+class Athlete(object): 
+    pass

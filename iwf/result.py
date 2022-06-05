@@ -1,0 +1,2 @@
+class Result(object):
+    pass
