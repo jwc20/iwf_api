@@ -62,7 +62,7 @@ ATHLETE_ID_URL = "id="
 TIME_TO_WAIT = 3  # TODO: consider using Selenium WebDriver Wait API
 
 
-def isResult(url):
+def is_result(url):
     """
     Validates event url.
     Example: https://iwf.sport/results/results-by-events/?event_id=529
@@ -70,7 +70,7 @@ def isResult(url):
     return True if RESULT_URL in url else False
 
 
-def isAthleteBio(url):
+def is_athlete_bio(url):
     """
     Validate athlete url.
     Example: https://iwf.sport/weightlifting_/athletes-bios/?athlete=ilyin-ilya-1988-05-24&id=7895
@@ -78,7 +78,7 @@ def isAthleteBio(url):
     return True if ATHLETE_BIO_URL in url else False
 
 
-def _loadNewBodyweightEventsPage():
+def _load_new_bodyweight_events_page():
     """
     Loads the page for new bodyweight category
     """
@@ -87,7 +87,7 @@ def _loadNewBodyweightEventsPage():
     return BeautifulSoup(html, "lxml")
 
 
-def _loadOldBodyweightEventsPage():
+def _load_old_bodyweight_events_page():
     """
     Loads the page for new bodyweight category
     """
@@ -96,7 +96,7 @@ def _loadOldBodyweightEventsPage():
     return BeautifulSoup(html, "lxml")
 
 
-def _scrapeSelectYears(page):
+def _scrape_select_years(page):
     """
     Scrapes data for new or old bodyweight page
     """
@@ -109,14 +109,14 @@ def _scrapeSelectYears(page):
     return years
 
 
-def getYears():
+def get_years():
     """
     Gets all years available.
     New bodyweight years not needed since old bodyweight <select> includes them
     """
 
     # old_bw = []
-    # for year in _scrapeSelectYears(_loadOldBodyweightEventsPage):
+    # for year in _scrape_select_years(_load_old_bodyweight_events_page):
     #     if year <= 2018:
     #         old_bw.append(year)
 
@@ -124,8 +124,8 @@ def getYears():
     #     if old_events_years[i]:
     #         print(old_events_years[i])
 
-    # new_events_years = [_scrapeSelectYears(_loadNewBodyweightEventsPage())]
-    old_events_years = _scrapeSelectYears(_loadOldBodyweightEventsPage())
+    # new_events_years = [_scrape_select_years(_load_new_bodyweight_events_page())]
+    old_events_years = _scrape_select_years(_load_old_bodyweight_events_page())
     return old_events_years
 
 
