@@ -1,14 +1,17 @@
-from .core import *
+import core
 
 
 class Event(object):
-    """
     def __init__(self, keywords=[], *args):
-        self.name = name
-        self.location = location
-        self.date = date
-        self.url = url
-    """
+        self.keywords = keywords
 
+    def _scrape_event_info(self): # (self, li or soup_data)
+        data = {
+            "name": None,  # string
+            "url": None,  # string
+            "location": None,  # string
+            "date": None,  # string
+        }
 
-pass
+    def get_events(self, year=None, new_or_old=None, bodyweight=None, quantity=None, infinity=False, sort_by=None, nation=None, event_type=None, age_group=None):
+        return 0
