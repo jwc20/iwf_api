@@ -2,7 +2,6 @@
 
 import requests
 import time
-from iwf.helper import *
 
 from bs4 import BeautifulSoup
 from urllib.parse import urlencode
@@ -121,19 +120,12 @@ def getYears():
     #     if year <= 2018:
     #         old_bw.append(year)
 
+    # for i in range(len(old_events_years)):
+    #     if old_events_years[i]:
+    #         print(old_events_years[i])
+
     # new_events_years = [_scrapeSelectYears(_loadNewBodyweightEventsPage())]
-    old_events_years = [_scrapeSelectYears(_loadOldBodyweightEventsPage())]
-
-    for i in range(len(old_events_years)):
-        if old_events_years[i]:
-            print(old_events_years[i])
-
-    return 0
+    old_events_years = _scrapeSelectYears(_loadOldBodyweightEventsPage())
+    return old_events_years
 
 
-"""
-print(_scrapeSelectYears(_loadNewBodyweightEventsPage()))
-print(_scrapeSelectYears(_loadOldBodyweightEventsPage()))
-"""
-
-print(getYears())
