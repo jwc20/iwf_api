@@ -12,7 +12,7 @@ class Event(object):
         else:
             return BASE_URL + EVENTS_URL
 
-    def _load_event_page(
+    def _craft_url(
         self,
         url=None,
         new_or_old=None,
@@ -21,6 +21,7 @@ class Event(object):
         event_type=None,
         age_group=None,
     ):
+
         if url and is_event(url):
             r = requests.get(url, headers=HEADERS)
 
@@ -31,14 +32,24 @@ class Event(object):
                 search_url += YEAR_URL
             else:
                 if event_type:
-                  filters.append(EVENT_TYPE_URL + event_type)
+                    filters.append(EVENT_TYPE_URL + event_type)
                 elif age_group:
-                  filters.append(EVENT_AGE_URL + age_group)
+                    filters.append(EVENT_AGE_URL + age_group)
                 elif nation:
-                  filters.append(EVENT_NATION_URL + nation)
-            # r = requests.get(search_url)
-            print(search_url, filters)
-        return 0
+                    filters.append(EVENT_NATION_URL + nation)
+            # search_url += "&".join(filters)
+            for i in range(len(filters)):
+                if i == 0:
+                    search_url += "?" + filters[0]
+                search_url += "&" + filters[i]
+        return
+
+    def _load_event_page(self, search_url):
+        r = requests.get(search_url, headers=HEADERS)
+
+        html = r.text
+        return BeautifulSoup(html, "lxml")
+
     _load_event_page(year=2022)
 
     def _scrape_event_type(self):
