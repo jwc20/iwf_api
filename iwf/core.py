@@ -27,7 +27,7 @@ OLD_BW_EVENTS_URL = "/results/results-by-events/results-by-events-old-bw"
 
 # Event Year
 # Example: https://iwf.sport/results/results-by-events/?event_year=2022
-YEAR_URL = "event_year="
+YEAR_URL = "?event_year="
 
 # Event Filter
 # Example: https://iwf.sport/results/results-by-events/?event_type=all&event_age=all&event_nation=all
@@ -62,6 +62,14 @@ ATHLETE_ID_URL = "id="
 TIME_TO_WAIT = 3  # TODO: consider using Selenium WebDriver Wait API
 
 
+def is_event(url):
+    """
+    Validates events page
+    Example: https://iwf.sport/results/results-by-events/?event_type=all&event_age=all&event_nation=all
+    """
+    return True if EVENTS_URL or OLD_BW_EVENTS_URL in url else False
+
+
 def is_result(url):
     """
     Validates event url.
@@ -78,22 +86,22 @@ def is_athlete_bio(url):
     return True if ATHLETE_BIO_URL in url else False
 
 
-def _load_new_bodyweight_events_page():
-    """
-    Loads the page for new bodyweight category
-    """
-    r = requests.get(BASE_URL + EVENTS_URL, headers=HEADERS)
-    html = r.text
-    return BeautifulSoup(html, "lxml")
+# def _load_new_bodyweight_events_page():
+#     """
+#     Loads the page for new bodyweight category
+#     """
+#     r = requests.get(BASE_URL + EVENTS_URL, headers=HEADERS)
+#     html = r.text
+#     return BeautifulSoup(html, "lxml")
 
 
-def _load_old_bodyweight_events_page():
-    """
-    Loads the page for new bodyweight category
-    """
-    r = requests.get(BASE_URL + OLD_BW_EVENTS_URL, headers=HEADERS)
-    html = r.text
-    return BeautifulSoup(html, "lxml")
+# def _load_old_bodyweight_events_page():
+#     """
+#     Loads the page for new bodyweight category
+#     """
+#     r = requests.get(BASE_URL + OLD_BW_EVENTS_URL, headers=HEADERS)
+#     html = r.text
+#     return BeautifulSoup(html, "lxml")
 
 
 def _scrape_select_years(page):
@@ -116,5 +124,3 @@ def get_years():
     """
     old_events_years = _scrape_select_years(_load_old_bodyweight_events_page())
     return old_events_years
-
-
