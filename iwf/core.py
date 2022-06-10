@@ -114,17 +114,6 @@ def get_years():
     Gets all years available.
     New bodyweight years not needed since old bodyweight <select> includes them
     """
-
-    # old_bw = []
-    # for year in _scrape_select_years(_load_old_bodyweight_events_page):
-    #     if year <= 2018:
-    #         old_bw.append(year)
-
-    # for i in range(len(old_events_years)):
-    #     if old_events_years[i]:
-    #         print(old_events_years[i])
-
-    # new_events_years = [_scrape_select_years(_load_new_bodyweight_events_page())]
     old_events_years = _scrape_select_years(_load_old_bodyweight_events_page())
     return old_events_years
 
