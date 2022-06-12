@@ -5,4 +5,7 @@ search_keywords = []
 
 client = iwf.Iwf(search_keywords)
 
-client._load_event_page(self, year=2022)
+
+for event in client.get_events():
+  print(event)
+  print(event['name'])
