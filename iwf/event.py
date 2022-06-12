@@ -1,6 +1,8 @@
 from .core import *
 import json
 
+# TODO: add method for combining year and other filters
+
 
 class Event(object):
     def __init__(self, keywords=[], *args):
@@ -41,8 +43,6 @@ class Event(object):
                 filters.append(EVENT_AGE_URL + age_group)
             if nation:
                 filters.append(EVENT_NATION_URL + nation)
-        # search_url += "&".join(filters)
-        print(len(filters))
         search_url += "/?" + filters[0]
         if len(filters) > 1:
             for i in range(1, len(filters)):
@@ -55,14 +55,14 @@ class Event(object):
         html = r.text
         return BeautifulSoup(html, "lxml")
 
-    def _scrape_event_type(self):
-        return
+    # def _scrape_event_type(self):
+    #     return
 
-    def _scrape_event_age_group(self):
-        return
+    # def _scrape_event_age_group(self):
+    #     return
 
-    def _scrape_event_nation(self):
-        return
+    # def _scrape_event_nation(self):
+    #     return
 
     def _scrape_event_div_card(self):
         """
@@ -76,14 +76,28 @@ class Event(object):
     def _scrape_event_info(self, soup_data):  # (self, li or soup_data)
         data = {
             "name": None,  # string
-            "url": None,  # string
+            "result_url": None,  # string
             "location": None,  # string
             "date": None,  # string
         }
 
-        # data["name"] =
+        cards = soup_data.findAll("a", {"class": "card"})
 
-        return
+        for card in cards:
+            data["name"] = card.find("span", {"class": "text"}).string
+            data["result_url"] = card["href"]
+            # print(card['href'])
+            data["location"] = card.find("strong").string
+            data["date"] = card.find("p", {"class": "normal__text"}).string.strip()
+            print(
+                card.find("p", {"class": "normal__text"})
+                .string.strip()
+            )
+
+        # data["name"] = soup_data.find("span").find("text")
+        # print()
+
+        return data
 
     def get_events(
         self,
