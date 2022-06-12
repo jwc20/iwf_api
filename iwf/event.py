@@ -22,38 +22,32 @@ class Event(object):
         event_type=None,
         age_group=None,
     ):
-        search_url = ''
+        search_url = ""
         if url and is_event(url):
             r = requests.get(url, headers=HEADERS)
 
         if new_or_old:
-          search_url = self._craft_bodyweight_url(new_or_old)
+            search_url = self._craft_bodyweight_url(new_or_old)
 
         filters = []
         if year:
             search_url += YEAR_URL + year
         else:
             if event_type:
-                if ' ' in event_type:
-                  print('has space')
-                  print(event_type)
-                  event_type_new = event_type.replace(' ', '+')
-                  print(event_type_new)
-                  filters.append(EVENT_TYPE_URL + event_type_new)
-            elif age_group:
+                if " " in event_type:
+                    event_type_new = event_type.replace(" ", "+")
+                    filters.append(EVENT_TYPE_URL + event_type_new)
+            if age_group:
                 filters.append(EVENT_AGE_URL + age_group)
-            elif nation:
+            if nation:
                 filters.append(EVENT_NATION_URL + nation)
         # search_url += "&".join(filters)
         print(len(filters))
-        for i in range(len(filters)):
-            if len(filters) == 1:
-                search_url += "/?" + filters[0]
-                return search_url
-            else:
-              search_url += "&" + filters[i]
-              return search_url
-        # return search_url
+        search_url += "/?" + filters[0]
+        if len(filters) > 1:
+            for i in range(1, len(filters)):
+                search_url += "&" + filters[i]
+        return search_url
 
     def _load_event_page(self, search_url):
         r = requests.get(search_url, headers=HEADERS)
