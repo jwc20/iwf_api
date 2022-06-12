@@ -1,3 +1,4 @@
+from hashlib import new
 from .core import *
 import json
 
@@ -17,19 +18,20 @@ class Event(object):
 
     def _craft_url(
         self,
-        url=None,
-        new_or_old=None,
+        new_or_old,
         year=None,
         nation=None,
         event_type=None,
         age_group=None,
     ):
         search_url = ""
-        if url and is_event(url):
-            r = requests.get(url, headers=HEADERS)
+        # if url and is_event(url):
+        #     r = requests.get(url, headers=HEADERS)
 
+        # print(new_or_old)
         if new_or_old:
             search_url = self._craft_bodyweight_url(new_or_old)
+            # print(search_url)
 
         filters = []
         if year:
@@ -43,14 +45,35 @@ class Event(object):
                 filters.append(EVENT_AGE_URL + age_group)
             if nation:
                 filters.append(EVENT_NATION_URL + nation)
-        search_url += "/?" + filters[0]
-        if len(filters) > 1:
+
+        if len(filters) >= 1:
+            search_url += "/?" + filters[0]
             for i in range(1, len(filters)):
                 search_url += "&" + filters[i]
         return search_url
 
-    def _load_event_page(self, search_url):
-        r = requests.get(search_url, headers=HEADERS)
+    def _load_event_page(
+        self,
+        search_url=None,
+        new_or_old=None,
+        year=None,
+        nation=None,
+        event_type=None,
+        age_group=None,
+    ):
+
+        if search_url and is_event(search_url):
+            r = requests.get(search_url, headers=HEADERS)
+        else:
+            # print(new_or_old)
+            new_url = self._craft_url(
+                new_or_old,
+                year,
+                nation,
+                event_type,
+                age_group,
+            )
+            r = requests.get(new_url, headers=HEADERS)
 
         html = r.text
         return BeautifulSoup(html, "lxml")
@@ -84,15 +107,15 @@ class Event(object):
         cards = soup_data.findAll("a", {"class": "card"})
 
         for card in cards:
-            data["name"] = card.find("span", {"class": "text"}).string
-            data["result_url"] = card["href"]
-            # print(card['href'])
-            data["location"] = card.find("strong").string
-            data["date"] = card.find("p", {"class": "normal__text"}).string.strip()
-            print(
-                card.find("p", {"class": "normal__text"})
-                .string.strip()
-            )
+            try:
+                data["name"] = card.find("span", {"class": "text"}).string
+                data["result_url"] = card["href"]
+                # print(card['href'])
+                data["location"] = card.find("strong").string
+                data["date"] = card.find("p", {"class": "normal__text"}).string.strip()
+                # print(card.find("p", {"class": "normal__text"}).string.strip())
+            except:
+                return {}
 
         # data["name"] = soup_data.find("span").find("text")
         # print()
@@ -111,4 +134,7 @@ class Event(object):
         event_type=None,
         age_group=None,
     ):
-        return 0
+
+        # while True:
+        #   for event in self._scrape_event_info(self._load_event_page())
+        return
