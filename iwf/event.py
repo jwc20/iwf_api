@@ -1,8 +1,6 @@
 from .core import *
 import json
 
-# TODO: add method for combining year and other filters
-
 
 class Event(object):
     def __init__(self, keywords=[], *args):
