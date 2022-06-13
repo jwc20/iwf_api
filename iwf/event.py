@@ -98,9 +98,7 @@ class Event(object):
     #     # print(soup_data.findAll("a", {"class": "card"}))
     #     return soup_data.findAll("a", {"class": "card"})
 
-
-
-    def _scrape_event_info(self, soup_data): 
+    def _scrape_event_info(self, soup_data):
         result = []
         data = {
             "name": None,  # string
@@ -109,29 +107,20 @@ class Event(object):
             "date": None,  # string
         }
 
-        
-        cards = soup_data.findAll("a", {"class": "card"})
+        # cards = soup_data.findAll("a", {"class": "card"})
+        cards = soup_data.find("div", {"class": "cards"})
 
         # cards = self._scrape_a_event(soup_data)
-        
+
         # print(cards[0])
         for i, card in enumerate(cards):
-            # print('result: ', result)
-            
-            # data = EventInfo()
-            # print("##############################################",card)
             # data["name"] = card.find("span", {"class": "text"}).string
-            data["name"] = card.xpath("//div[2]/a[1]/div[1]/div/div[1]/p/span")
+            data["name"] = card.xpath("//a[1]/div[1]/div/div[1]/p/span")
             # data["result_url"] = card["href"]
-            # # print(card['href'])
             # data["location"] = card.find("strong").string
             # data["date"] = card.find("p", {"class": "normal__text"}).string.strip()
-            # print(card.find("p", {"class": "normal__text"}).string.strip())
-            # print(data)
             result.append(data)
         print(result)
-            
-            
 
         # print(result)
         # return json.dumps(result)
@@ -165,10 +154,15 @@ class Event(object):
         #         age_group,
         #     )
         # ):
-        result_data = self._scrape_event_info(self._load_event_page(search_url, new_or_old, year, nation, event_type, age_group))
+        result_data = self._scrape_event_info(
+            self._load_event_page(
+                search_url, new_or_old, year, nation, event_type, age_group
+            )
+        )
         # print(result_data)
         if result_data:
-          return result_data
+            return result_data
+            # yield result_data
             # if data_dict:
             #     yield data_dict
             # print(data_dict)
