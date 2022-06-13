@@ -86,22 +86,22 @@ def is_athlete_bio(url):
     return True if ATHLETE_BIO_URL in url else False
 
 
-# def _load_new_bodyweight_events_page():
-#     """
-#     Loads the page for new bodyweight category
-#     """
-#     r = requests.get(BASE_URL + EVENTS_URL, headers=HEADERS)
-#     html = r.text
-#     return BeautifulSoup(html, "lxml")
+def _load_new_bodyweight_events_page():
+    """
+    Loads the page for new bodyweight category
+    """
+    r = requests.get(BASE_URL + EVENTS_URL, headers=HEADERS)
+    html = r.text
+    return BeautifulSoup(html, "lxml")
 
 
-# def _load_old_bodyweight_events_page():
-#     """
-#     Loads the page for new bodyweight category
-#     """
-#     r = requests.get(BASE_URL + OLD_BW_EVENTS_URL, headers=HEADERS)
-#     html = r.text
-#     return BeautifulSoup(html, "lxml")
+def _load_old_bodyweight_events_page():
+    """
+    Loads the page for new bodyweight category
+    """
+    r = requests.get(BASE_URL + OLD_BW_EVENTS_URL, headers=HEADERS)
+    html = r.text
+    return BeautifulSoup(html, "lxml")
 
 
 def _scrape_select_years(page):
@@ -124,3 +124,30 @@ def get_years():
     """
     old_events_years = _scrape_select_years(_load_old_bodyweight_events_page())
     return old_events_years
+
+
+def _scrape_event_type():
+    types = []
+    page = _load_new_bodyweight_events_page().find("select", {"name": "event_type"})
+    for option in page.find_all("option"):
+        if option.has_attr("value") and option["value"] != "all":
+            types.append(option.text)
+    return types
+
+
+def _scrape_event_age_group():
+    age_groups = []
+    page = _load_new_bodyweight_events_page().find("select", {"name": "event_age"})
+    for option in page.find_all("option"):
+        if option.has_attr("value") and option["value"] != "all":
+            age_groups.append(option.text)
+    return age_groups
+
+
+def _scrape_event_nation():
+    nations = []
+    page = _load_new_bodyweight_events_page().find("select", {"name": "event_nation"})
+    for option in page.find_all("option"):
+        if option.has_attr("value") and option["value"] != "all":
+            nations.append(option.text)
+    return nations

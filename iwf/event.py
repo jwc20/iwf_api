@@ -99,11 +99,4 @@ class Event(object):
         if result_data:
             return result_data
 
-    def _scrape_event_type(self):
-        return
-
-    def _scrape_event_age_group(self):
-        return
-
-    def _scrape_event_nation(self):
-        return
+    
