@@ -14,6 +14,7 @@ class Event(object):
         event_type=None,
         age_group=None,
     ):
+
         search_url = ""
         filters = []
         if new_or_old == "old":
@@ -21,6 +22,7 @@ class Event(object):
         else:
             search_url = BASE_URL + EVENTS_URL
 
+        # TODO: Combine years results with other filters
         if year:
             search_url += YEAR_URL + year
         else:
@@ -84,8 +86,8 @@ class Event(object):
 
     def get_events(
         self,
-        year=None,
         search_url=None,
+        year=None,
         new_or_old=None,
         nation=None,
         event_type=None,
@@ -98,5 +100,3 @@ class Event(object):
         )
         if result_data:
             return result_data
-
-    

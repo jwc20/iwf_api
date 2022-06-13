@@ -1,5 +1,20 @@
+from .core import *
+import json
+
+
 class Result(object):
-    def _scrape_result_info(self):  # (self, li or soup_data)
+    def __init__(self, keywords=[], *args):
+        self.keywords = keywords
+
+
+    def _load_result_page(self, search_url):
+        r = requests.get(search_url, headers=HEADERS)
+        html = r.text
+        return BeautifulSoup(html, 'lxml')
+
+
+    def _scrape_result_info(self, soup_data):
+        result = []
         data = {
             "name": None,  # string
             "birthdate": None,  # string
@@ -21,6 +36,10 @@ class Result(object):
             "rank_cj": None,  # string
             "rank": None,  # string
         }
+
+        return
+
+
 
     def get_results(self):
         return
