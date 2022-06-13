@@ -8,13 +8,6 @@ class Event(object):
     def __init__(self, keywords=[], *args):
         self.keywords = keywords
 
-    # def _craft_bodyweight_url(self, new_or_old):
-    #     if new_or_old == "old":
-    #         return BASE_URL + OLD_BW_EVENTS_URL
-    #     # if new_or_old == "new":
-    #     else:
-    #         return BASE_URL + EVENTS_URL
-
     def _craft_url(
         self,
         new_or_old=None,
@@ -25,13 +18,6 @@ class Event(object):
     ):
         search_url = ""
         filters = []
-        # if url and is_event(url):
-        #     r = requests.get(url, headers=HEADERS)
-
-        # print(new_or_old)
-        # if new_or_old:
-        #     # this is for 2018
-        #     search_url = self._craft_bodyweight_url(new_or_old)
         if new_or_old == "old":
             search_url = BASE_URL + OLD_BW_EVENTS_URL
         else:
@@ -68,7 +54,6 @@ class Event(object):
         if search_url and is_event(search_url):
             r = requests.get(search_url, headers=HEADERS)
         else:
-            # print(new_or_old)
             new_url = self._craft_url(
                 new_or_old,
                 year,
@@ -81,35 +66,9 @@ class Event(object):
         html = r.text
         return BeautifulSoup(html, "lxml")
 
-    # def _scrape_event_type(self):
-    #     return
-
-    # def _scrape_event_age_group(self):
-    #     return
-
-    # def _scrape_event_nation(self):
-    #     return
-
-    # TODO Don't really need this
-    # def _scrape_a_event(self, soup_data):
-    #     # print(soup_data.findAll("a", {"class": "card"}))
-    #     return soup_data.findAll("a", {"class": "card"})
-
     def _scrape_event_info(self, soup_data):
         result = []
-        # data = {
-        #     "name": None,  # string
-        #     "result_url": None,  # string
-        #     "location": None,  # string
-        #     "date": None,  # string
-        # }
-
         cards = soup_data.findAll("a", {"class": "card"})
-        # cards = soup_data.find("div", {"class": "cards"})
-
-        # cards = self._scrape_a_event(soup_data)
-
-        # print(cards[0])
         for card in cards:
             data = {
                 "name": None,  # string
@@ -118,18 +77,10 @@ class Event(object):
                 "date": None,  # string
             }
             data["name"] = card.find("span", {"class": "text"}).string
-            # data["name"] = card.xpath("//a[1]/div[1]/div/div[1]/p/span")
-            # data["result_url"] = card["href"]
-            # data["location"] = card.find("strong").string
-            # data["date"] = card.find("p", {"class": "normal__text"}).string.strip()
+            data["result_url"] = card["href"]
+            data["location"] = card.find("strong").string
+            data["date"] = card.find("p", {"class": "normal__text"}).string.strip()
             result.append(data)
-
-        # print(result)
-        # return json.dumps(result)
-
-        # data["name"] = soup_data.find("span").find("text")
-        # print()
-
         return result
 
     def get_events(
@@ -141,39 +92,19 @@ class Event(object):
         event_type=None,
         age_group=None,
     ):
-        # bodyweight=None,
-        # quantity=None,
-        # infinity=False,
-        # sort_by=None,
-
-        # for event in self._scrape_a_event(
-        #     self._load_event_page(
-        #         search_url,
-        #         new_or_old,
-        #         year,
-        #         nation,
-        #         event_type,
-        #         age_group,
-        #     )
-        # ):
         result_data = self._scrape_event_info(
             self._load_event_page(
                 search_url, new_or_old, year, nation, event_type, age_group
             )
         )
-        # print(result_data)
         if result_data:
             return result_data
-            # yield result_data
-            # if data_dict:
-            #     yield data_dict
-            # print(data_dict)
-        # return data_dict
 
+    def _scrape_event_type(self):
+        return
 
-# class EventInfo:
-#     def __init__(self, args=None):
-#         self.name = ''
-#         self.location = ''
-#         self.result_url = ''
-#         self.nation = ''
+    def _scrape_event_age_group(self):
+        return
+
+    def _scrape_event_nation(self):
+        return
