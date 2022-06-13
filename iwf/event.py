@@ -37,6 +37,7 @@ class Event(object):
             search_url += "/?" + filters[0]
             for i in range(1, len(filters)):
                 search_url += "&" + filters[i]
+        print(search_url)
         return search_url
 
     def _load_event_page(
