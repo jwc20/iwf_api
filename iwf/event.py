@@ -1,6 +1,3 @@
-from hashlib import new
-from unittest import result
-
 from .core import *
 import json
 
@@ -100,27 +97,32 @@ class Event(object):
 
     def _scrape_event_info(self, soup_data):
         result = []
-        data = {
-            "name": None,  # string
-            "result_url": None,  # string
-            "location": None,  # string
-            "date": None,  # string
-        }
+        # data = {
+        #     "name": None,  # string
+        #     "result_url": None,  # string
+        #     "location": None,  # string
+        #     "date": None,  # string
+        # }
 
-        # cards = soup_data.findAll("a", {"class": "card"})
-        cards = soup_data.find("div", {"class": "cards"})
+        cards = soup_data.findAll("a", {"class": "card"})
+        # cards = soup_data.find("div", {"class": "cards"})
 
         # cards = self._scrape_a_event(soup_data)
 
         # print(cards[0])
-        for i, card in enumerate(cards):
-            # data["name"] = card.find("span", {"class": "text"}).string
-            data["name"] = card.xpath("//a[1]/div[1]/div/div[1]/p/span")
+        for card in cards:
+            data = {
+                "name": None,  # string
+                "result_url": None,  # string
+                "location": None,  # string
+                "date": None,  # string
+            }
+            data["name"] = card.find("span", {"class": "text"}).string
+            # data["name"] = card.xpath("//a[1]/div[1]/div/div[1]/p/span")
             # data["result_url"] = card["href"]
             # data["location"] = card.find("strong").string
             # data["date"] = card.find("p", {"class": "normal__text"}).string.strip()
             result.append(data)
-        print(result)
 
         # print(result)
         # return json.dumps(result)
