@@ -55,6 +55,11 @@ class Result(object):
                             # print(cards.find_all("div", {"class": "col-7 not__cell__767"}))
                             # card_container = cards.find_all("div", {"class": "col-7 not__cell__767"})
                             card_container = cards.find_all("div", {"class": "card"})
+
+
+
+
+                            
                             for card in card_container[1:]:
 
                                 data = {
@@ -93,6 +98,10 @@ class Result(object):
                                 data["snatch2"] = card.find_all("p")[7].text.strip().split()[1]
                                 data["snatch3"] = card.find_all("p")[8].text.strip().split()[1]    
                                 data["snatch"] = card.find_all("p")[9].text.strip().split()[1]
+                            # print(card_container[0].parent.previous_sibling.previous_sibling.previous_sibling.previous_sibling.text.strip())
+                            # print(cards.previous_sibling.previous_sibling.previous_sibling.previous_sibling.text.strip())
+                                data["category"] = card.parent.previous_sibling.previous_sibling.previous_sibling.previous_sibling.text.strip()
+
 
                                 # sn = card.find_all("p")[9].text.strip()
                                 # data["snatch"] = re.search(r"\d+", sn)
@@ -102,7 +111,7 @@ class Result(object):
 
                                 result.append(data)
                             # print(
-                            #     "#####################################end of card######################################"
+                            #     "#####################################end of cards######################################"
                             # )
 
                             # print(p_tags)
