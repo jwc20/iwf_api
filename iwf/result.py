@@ -1,9 +1,5 @@
 from .core import *
 import json
-import re
-
-# from lxml import html
-from lxml import etree
 
 
 class Result(object):
@@ -26,22 +22,10 @@ class Result(object):
             # women_total
             # women_snatchjerk
 
-            # print(len(result_container))
-            # print(div_id if div_id.get("id") == "men_snatchjerk" else "ACK")
-
             if (
                 div_id.get("id") == "men_snatchjerk"
                 or div_id.get("id") == "women_snatchjerk"
             ):
-
-                category = div_id.find_all("div", {"class": "col-12"})
-
-                # data["name"] = (
-                #     div_id.find("div", {"class": "col-7 not__cell__767"})
-                #     .find("p")
-                #     .text.strip()
-                # )
-
 
                 cards_container = div_id.find_all("div", {"class": "cards"})
 
