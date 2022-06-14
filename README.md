@@ -43,7 +43,7 @@ A pip library to scrape filtered events and results from the IWF (International 
 To install, pip install into python virtual environment.
 
 ```
-pip install git+https://github.com/jwc20/iwf-api.git
+pip install -i https://test.pypi.org/simple/ iwf-api-jwc20
 ```
 
 ### Requirements:
