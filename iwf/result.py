@@ -1,3 +1,4 @@
+from heapq import merge
 from .core import *
 import json
 
@@ -33,7 +34,7 @@ class Result(object):
                 # getting the names, nation, birthdate, bodyweight, group, and snatches
                 for cards in cards_container[::3]:
                     card_container = cards.find_all("div", {"class": "card"})
- 
+
                     for card in card_container[1:]:
                         # data = {
                         #     "name": None,  # string
@@ -91,7 +92,7 @@ class Result(object):
 
                 for cards in cards_container[1::3]:
                     card_container = cards.find_all("div", {"class": "card"})
- 
+
                     for card in card_container[1:]:
                         data_cj = {}
                         name = card.find_all("p")[1].text.strip()
@@ -100,7 +101,7 @@ class Result(object):
                         jerk2 = card.find_all("p")[7].text.strip()
                         jerk3 = card.find_all("p")[8].text.strip()
                         jerk = card.find_all("p")[9].text.strip()
-                        
+
                         if name and jerk:
                             data_cj["name"] = name
                             data_cj["jerk1"] = jerk1
@@ -110,44 +111,26 @@ class Result(object):
 
                         result.append(data_cj)
 
-                
                 for cards in cards_container[2::3]:
                     card_container = cards.find_all("div", {"class": "card"})
- 
+
                     for card in card_container[1:]:
                         data_total = {}
                         name = card.find_all("p")[1].text.strip()
                         total = card.find_all("p")[8].text.strip()
-                        # print(total)
                         if name and total:
                             data_total["name"] = name
                             data_total["total"] = total
-    
-                        # if name and total:
-                        #     data_cj["name"] = name
-                        #     data_cj["jerk1"] = jerk1
-                        #     data_cj["jerk2"] = jerk2
-                        #     data_cj["jerk3"] = jerk3
-                        #     data_cj["jerk"] = jerk
-
                         result.append(data_total)
-                        
+        
+        merged_result = {}
+        for r in result:
+            key = r["name"]
+            merged_result.setdefault(key, {}).update(r)
 
+        return list(merged_result.values())
 
-
-                            # print(card.parent.next_sibling.next_sibling.next_sibling.next_sibling.find_all('p')[16])
-                        
-                        # print(cards)
-
-                        # cj_cards = cards.next_sibling.next_sibling.next_sibling.next_sibling.find_all("div", {"class": "card"})
-                        # for cj_card in cj_cards[1:]:
-                        #     # print(cj_card.find_all("p")[6])
-                        #     print(cj_card)
-                        #     jerk1 = cj_card.find_all("p")[6]
-                        #     data["jerk1"] = jerk1
-                        # result.append(data)
-
-        return result
+        # return result
 
     def get_results(self):
         return
