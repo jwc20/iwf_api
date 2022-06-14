@@ -1,6 +1,9 @@
 from .core import *
 import json
 
+# from lxml import html
+from lxml import etree
+
 
 class Result(object):
     def __init__(self, keywords=[], *args):
@@ -13,11 +16,10 @@ class Result(object):
 
     def _scrape_result_info(self, soup_data):
         result = []
-
         for div_id in soup_data.find_all("div", {"class": "result__container"}):
-            
-            for div_cl in div_id.findAll('div'):
-                
+
+            for div_cl in div_id.findAll("div"):
+
                 data = {
                     "name": None,  # string
                     "birthdate": None,  # string
@@ -39,17 +41,61 @@ class Result(object):
                     "rank_cj": None,  # string
                     "rank": None,  # string
                 }
-                
-                name_container = div_cl.find('div', {'class': 'col-7 not__cell__767'})
+
+                name_container = div_cl.find("div", {"class": "col-7 not__cell__767"})
                 if name_container:
-                    name = name_container.find('p').string.strip()
+                    name = name_container.find("p").string.strip()
                     data["name"] = name
                     # print(name)
                     # print(name.find('p').text.strip())
                     # if name in data
                     result.append(data)
 
-        return result[0]
+        return result
+
+        # cards = soup_data.select("div.cards")
+        # results = []
+
+        # cards_list = soup_data.find_all('div', {'class': 'cards'})
+        # # print(row_list)
+        # for card in cards_list:
+        #     for car in card.find_all('div', {'class': 'card'}):
+        #         data = {
+        #             "name": None,  # string
+        #             "birthdate": None,  # string
+        #             "nation": None,  # string
+        #             "athlete_url": None,  # string
+        #             "category": None,  # string
+        #             "bodyweight": None,  # string
+        #             "group": None,  # string
+        #             "snatch1": None,  # string
+        #             "snatch2": None,  # string
+        #             "snatch3": None,  # string
+        #             "snatch": None,  # string
+        #             "jerk1": None,  # string
+        #             "jerk2": None,  # string
+        #             "jerk3": None,  # string
+        #             "jerk": None,  # string
+        #             "total": None,  # string
+        #             "rank_sn": None,  # string
+        #             "rank_cj": None,  # string
+        #             "rank": None,  # string
+        #         }
+        #         # print(car)
+        #         name = car.find("div", {"class": "col-7 not__cell__767"})
+        #         # print(name)
+        #         if name and name != None:
+        #             # print(name)
+        #             data["name"] = name.find('p').text.strip()
+        #         # name = car.find("div", {"class": "col-7 not__cell__767"}).find('p').text.strip()
+        #         # if name:
+        #         #     data["name"] = name
+        #         # print(name)
+        #         # print(car)
+
+        #     results.append(data)
+
+        # return results
 
     def get_results(self):
         return
