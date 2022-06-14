@@ -28,62 +28,124 @@ class Result(object):
             ):
 
                 cards_container = div_id.find_all("div", {"class": "cards"})
+                data = {}
 
                 # getting the names, nation, birthdate, bodyweight, group, and snatches
                 for cards in cards_container[::3]:
                     card_container = cards.find_all("div", {"class": "card"})
-
+ 
                     for card in card_container[1:]:
+                        # data = {
+                        #     "name": None,  # string
+                        #     "birthdate": None,  # string
+                        #     "nation": None,  # string
+                        #     "athlete_url": None,  # string
+                        #     "category": None,  # string
+                        #     "bodyweight": None,  # string
+                        #     "group": None,  # string
+                        #     "snatch1": None,  # string
+                        #     "snatch2": None,  # string
+                        #     "snatch3": None,  # string
+                        #     "snatch": None,  # string
+                        #     "jerk1": None,  # string
+                        #     "jerk2": None,  # string
+                        #     "jerk3": None,  # string
+                        #     "jerk": None,  # string
+                        #     "total": None,  # string
+                        #     "rank_sn": None,  # string
+                        #     "rank_cj": None,  # string
+                        #     "rank": None,  # string
+                        # }
 
-                        data = {
-                            "name": None,  # string
-                            "birthdate": None,  # string
-                            "nation": None,  # string
-                            "athlete_url": None,  # string
-                            "category": None,  # string
-                            "bodyweight": None,  # string
-                            "group": None,  # string
-                            "snatch1": None,  # string
-                            "snatch2": None,  # string
-                            "snatch3": None,  # string
-                            "snatch": None,  # string
-                            "jerk1": None,  # string
-                            "jerk2": None,  # string
-                            "jerk3": None,  # string
-                            "jerk": None,  # string
-                            "total": None,  # string
-                            "rank_sn": None,  # string
-                            "rank_cj": None,  # string
-                            "rank": None,  # string
-                        }
+                        data_snatch = {}
+
                         name = card.find_all("p")[1].text.strip()
                         nation = card.find_all("p")[2].text.strip()
                         birthdate = card.find_all("p")[3].text.strip()
                         bodyweight = card.find_all("p")[4].text.strip()
                         group = card.find_all("p")[5].text.strip()
-                        snatch1 = card.find_all("p")[6].text.strip().split()[1]
+                        # may need to use use strong tag to get the strike tags
+                        # add x if missed lift?
+                        snatch1 = card.find_all("p")[6].strong
                         snatch2 = card.find_all("p")[7].text.strip().split()[1]
                         snatch3 = card.find_all("p")[8].text.strip().split()[1]
                         snatch = card.find_all("p")[9].text.strip().split()[1]
 
                         if name and snatch:
 
-                            data["name"] = name
-                            data["nation"] = nation
-                            data["birthdate"] = birthdate
-                            data["bodyweight"] = bodyweight
-                            data["group"] = group
-                            data["snatch1"] = snatch1
-                            data["snatch2"] = snatch2
-                            data["snatch3"] = snatch3
-                            data["snatch"] = snatch
-                            data[
+                            data_snatch["name"] = name
+                            data_snatch["nation"] = nation
+                            data_snatch["birthdate"] = birthdate
+                            data_snatch["bodyweight"] = bodyweight
+                            data_snatch["group"] = group
+                            data_snatch["snatch1"] = snatch1
+                            data_snatch["snatch2"] = snatch2
+                            data_snatch["snatch3"] = snatch3
+                            data_snatch["snatch"] = snatch
+                            data_snatch[
                                 "category"
                             ] = (
                                 card.parent.previous_sibling.previous_sibling.previous_sibling.previous_sibling.text.strip()
                             )
+                        result.append(data_snatch)
 
-                        result.append(data)
+                for cards in cards_container[1::3]:
+                    card_container = cards.find_all("div", {"class": "card"})
+ 
+                    for card in card_container[1:]:
+                        data_cj = {}
+                        name = card.find_all("p")[1].text.strip()
+                        # print(name)
+                        jerk1 = card.find_all("p")[6].text.strip()
+                        jerk2 = card.find_all("p")[7].text.strip()
+                        jerk3 = card.find_all("p")[8].text.strip()
+                        jerk = card.find_all("p")[9].text.strip()
+                        
+                        if name and jerk:
+                            data_cj["name"] = name
+                            data_cj["jerk1"] = jerk1
+                            data_cj["jerk2"] = jerk2
+                            data_cj["jerk3"] = jerk3
+                            data_cj["jerk"] = jerk
+
+                        result.append(data_cj)
+
+                
+                for cards in cards_container[2::3]:
+                    card_container = cards.find_all("div", {"class": "card"})
+ 
+                    for card in card_container[1:]:
+                        data_total = {}
+                        name = card.find_all("p")[1].text.strip()
+                        total = card.find_all("p")[8].text.strip()
+                        # print(total)
+                        if name and total:
+                            data_total["name"] = name
+                            data_total["total"] = total
+    
+                        # if name and total:
+                        #     data_cj["name"] = name
+                        #     data_cj["jerk1"] = jerk1
+                        #     data_cj["jerk2"] = jerk2
+                        #     data_cj["jerk3"] = jerk3
+                        #     data_cj["jerk"] = jerk
+
+                        result.append(data_total)
+                        
+
+
+
+                            # print(card.parent.next_sibling.next_sibling.next_sibling.next_sibling.find_all('p')[16])
+                        
+                        # print(cards)
+
+                        # cj_cards = cards.next_sibling.next_sibling.next_sibling.next_sibling.find_all("div", {"class": "card"})
+                        # for cj_card in cj_cards[1:]:
+                        #     # print(cj_card.find_all("p")[6])
+                        #     print(cj_card)
+                        #     jerk1 = cj_card.find_all("p")[6]
+                        #     data["jerk1"] = jerk1
+                        # result.append(data)
 
         return result
 
