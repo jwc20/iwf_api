@@ -1,4 +1,5 @@
 from heapq import merge
+from unicodedata import category
 from .core import *
 import json
 
@@ -17,63 +18,40 @@ class Result(object):
 
         result_container = soup_data.find_all("div", {"class": "result__container"})
         for div_id in result_container:
-
-            # id="men_total"
-            # men_snatchjerk
-            # women_total
-            # women_snatchjerk
-
             if (
                 div_id.get("id") == "men_snatchjerk"
                 or div_id.get("id") == "women_snatchjerk"
             ):
 
                 cards_container = div_id.find_all("div", {"class": "cards"})
-                data = {}
-
-                # getting the names, nation, birthdate, bodyweight, group, and snatches
                 for cards in cards_container[::3]:
                     card_container = cards.find_all("div", {"class": "card"})
 
                     for card in card_container[1:]:
-                        # data = {
-                        #     "name": None,  # string
-                        #     "birthdate": None,  # string
-                        #     "nation": None,  # string
-                        #     "athlete_url": None,  # string
-                        #     "category": None,  # string
-                        #     "bodyweight": None,  # string
-                        #     "group": None,  # string
-                        #     "snatch1": None,  # string
-                        #     "snatch2": None,  # string
-                        #     "snatch3": None,  # string
-                        #     "snatch": None,  # string
-                        #     "jerk1": None,  # string
-                        #     "jerk2": None,  # string
-                        #     "jerk3": None,  # string
-                        #     "jerk": None,  # string
-                        #     "total": None,  # string
-                        #     "rank_sn": None,  # string
-                        #     "rank_cj": None,  # string
-                        #     "rank": None,  # string
-                        # }
-
                         data_snatch = {}
 
                         name = card.find_all("p")[1].text.strip()
                         nation = card.find_all("p")[2].text.strip()
-                        birthdate = card.find_all("p")[3].text.strip()
-                        bodyweight = card.find_all("p")[4].text.strip()
-                        group = card.find_all("p")[5].text.strip()
+                        birthdate = ' '.join(card.find_all("p")[3].text.strip().split()[1:])
+                        bodyweight = card.find_all("p")[4].text.strip().split()[1]
+                        group = card.find_all("p")[5].text.strip().split()[1]
                         # may need to use use strong tag to get the strike tags
                         # add x if missed lift?
-                        snatch1 = card.find_all("p")[6].strong
-                        snatch2 = card.find_all("p")[7].text.strip().split()[1]
-                        snatch3 = card.find_all("p")[8].text.strip().split()[1]
-                        snatch = card.find_all("p")[9].text.strip().split()[1]
+                        snatch1 = card.find_all("p")[6].strong.contents[0]
+                        # snatch2 = card.find_all("p")[7].text.strip().split()[1]
+                        # snatch3 = card.find_all("p")[8].text.strip().split()[1]
+                        # snatch = card.find_all("p")[9].text.strip().split()[1]
+                        snatch2 = card.find_all("p")[7].strong.contents[0]
+                        snatch3 = card.find_all("p")[8].strong.contents[0]
+                        snatch = card.find_all("p")[9].strong.contents[1]
+
+                        
+                        category = card.parent.previous_sibling.previous_sibling.previous_sibling.previous_sibling.text.strip()
+                        category_number = category.split()[0]
+                        gender = category.split()[2]
+
 
                         if name and snatch:
-
                             data_snatch["name"] = name
                             data_snatch["nation"] = nation
                             data_snatch["birthdate"] = birthdate
@@ -83,11 +61,8 @@ class Result(object):
                             data_snatch["snatch2"] = snatch2
                             data_snatch["snatch3"] = snatch3
                             data_snatch["snatch"] = snatch
-                            data_snatch[
-                                "category"
-                            ] = (
-                                card.parent.previous_sibling.previous_sibling.previous_sibling.previous_sibling.text.strip()
-                            )
+                            data_snatch["category"] = category_number
+                            data_snatch["gender"] = gender
                         result.append(data_snatch)
 
                 for cards in cards_container[1::3]:
@@ -97,10 +72,10 @@ class Result(object):
                         data_cj = {}
                         name = card.find_all("p")[1].text.strip()
                         # print(name)
-                        jerk1 = card.find_all("p")[6].text.strip()
-                        jerk2 = card.find_all("p")[7].text.strip()
-                        jerk3 = card.find_all("p")[8].text.strip()
-                        jerk = card.find_all("p")[9].text.strip()
+                        jerk1 = card.find_all("p")[6].strong.contents[0]
+                        jerk2 = card.find_all("p")[7].strong.contents[0]
+                        jerk3 = card.find_all("p")[8].strong.contents[0]
+                        jerk = card.find_all("p")[9].strong.contents[1]
 
                         if name and jerk:
                             data_cj["name"] = name
@@ -117,20 +92,18 @@ class Result(object):
                     for card in card_container[1:]:
                         data_total = {}
                         name = card.find_all("p")[1].text.strip()
-                        total = card.find_all("p")[8].text.strip()
+                        total = card.find_all("p")[8].strong.contents[1]
                         if name and total:
                             data_total["name"] = name
                             data_total["total"] = total
                         result.append(data_total)
-        
+
         merged_result = {}
         for r in result:
             key = r["name"]
             merged_result.setdefault(key, {}).update(r)
 
         return list(merged_result.values())
-
-        # return result
 
     def get_results(self):
         return
