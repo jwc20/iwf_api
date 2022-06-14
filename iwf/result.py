@@ -49,7 +49,7 @@ class Result(object):
                         # print(item)
                         cards_container = div_id.find_all("div", {"class": "cards"})
 
-                        # getting the names, nation, and birthdate
+                        # getting the names, nation, birthdate, bodyweight, group
                         for cards in cards_container[::3]:
 
                             # print(cards.find_all("div", {"class": "col-7 not__cell__767"}))
@@ -81,15 +81,25 @@ class Result(object):
 
                                 # print(card)
                                 # p_tags = card.find_all('p')[1]
-                                p_tags_name = card.find_all("p")[1].text.strip()
+                                # p_tags_name = 
                                 # print(p_tags_name)
-                                data["name"] = p_tags_name
+                                # print(card.find_all("p"))
+                                data["name"] = card.find_all("p")[1].text.strip()
+                                data["nation"] = card.find_all("p")[2].text.strip()
+                                data["birthdate"] = card.find_all("p")[3].text.strip()
+                                data["bodyweight"] = card.find_all("p")[4].text.strip()
+                                data["group"] = card.find_all("p")[5].text.strip()
+                                data["snatch1"] = card.find_all("p")[6].text.strip().split()[1]
+                                data["snatch2"] = card.find_all("p")[7].text.strip().split()[1]
+                                data["snatch3"] = card.find_all("p")[8].text.strip().split()[1]    
+                                data["snatch"] = card.find_all("p")[9].text.strip().split()[1]
+
+                                # sn = card.find_all("p")[9].text.strip()
+                                # data["snatch"] = re.search(r"\d+", sn)
                                 # print(p_tags_name.text.strip())
 
                                 # print(type(p_tags))
 
-                                # for i in range(len(p_tags)):
-                                #     print(p_tags[i])
                                 result.append(data)
                             # print(
                             #     "#####################################end of card######################################"
