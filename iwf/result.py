@@ -44,6 +44,7 @@ class Result(object):
                         snatch2 = card.find_all("p")[7].strong.contents[0]
                         snatch3 = card.find_all("p")[8].strong.contents[0]
                         snatch = card.find_all("p")[9].strong.contents[1]
+                        rank_sn = card.find_all("p")[0].text.strip().split()[1]
 
                         
                         category = card.parent.previous_sibling.previous_sibling.previous_sibling.previous_sibling.text.strip()
@@ -61,6 +62,7 @@ class Result(object):
                             data_snatch["snatch2"] = snatch2
                             data_snatch["snatch3"] = snatch3
                             data_snatch["snatch"] = snatch
+                            data_snatch["rank_sn"] = rank_sn
                             data_snatch["category"] = category_number
                             data_snatch["gender"] = gender
                         result.append(data_snatch)
@@ -76,6 +78,7 @@ class Result(object):
                         jerk2 = card.find_all("p")[7].strong.contents[0]
                         jerk3 = card.find_all("p")[8].strong.contents[0]
                         jerk = card.find_all("p")[9].strong.contents[1]
+                        rank_cj = card.find_all("p")[0].text.strip().split()[1]
 
                         if name and jerk:
                             data_cj["name"] = name
@@ -83,6 +86,7 @@ class Result(object):
                             data_cj["jerk2"] = jerk2
                             data_cj["jerk3"] = jerk3
                             data_cj["jerk"] = jerk
+                            data_cj["rank_cj"] = rank_cj
 
                         result.append(data_cj)
 
@@ -93,9 +97,12 @@ class Result(object):
                         data_total = {}
                         name = card.find_all("p")[1].text.strip()
                         total = card.find_all("p")[8].strong.contents[1]
+                        rank = card.find_all("p")[0].text.strip().split()[1]
+
                         if name and total:
                             data_total["name"] = name
                             data_total["total"] = total
+                            data_total["rank"] = rank
                         result.append(data_total)
 
         merged_result = {}
