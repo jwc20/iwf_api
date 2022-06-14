@@ -32,25 +32,22 @@ class Result(object):
 
                         name = card.find_all("p")[1].text.strip()
                         nation = card.find_all("p")[2].text.strip()
-                        birthdate = ' '.join(card.find_all("p")[3].text.strip().split()[1:])
+                        birthdate = " ".join(
+                            card.find_all("p")[3].text.strip().split()[1:]
+                        )
                         bodyweight = card.find_all("p")[4].text.strip().split()[1]
                         group = card.find_all("p")[5].text.strip().split()[1]
-                        # may need to use use strong tag to get the strike tags
-                        # add x if missed lift?
                         snatch1 = card.find_all("p")[6].strong.contents[0]
-                        # snatch2 = card.find_all("p")[7].text.strip().split()[1]
-                        # snatch3 = card.find_all("p")[8].text.strip().split()[1]
-                        # snatch = card.find_all("p")[9].text.strip().split()[1]
                         snatch2 = card.find_all("p")[7].strong.contents[0]
                         snatch3 = card.find_all("p")[8].strong.contents[0]
                         snatch = card.find_all("p")[9].strong.contents[1]
                         rank_sn = card.find_all("p")[0].text.strip().split()[1]
 
-                        
-                        category = card.parent.previous_sibling.previous_sibling.previous_sibling.previous_sibling.text.strip()
+                        category = (
+                            card.parent.previous_sibling.previous_sibling.previous_sibling.previous_sibling.text.strip()
+                        )
                         category_number = category.split()[0]
                         gender = category.split()[2]
-
 
                         if name and snatch:
                             data_snatch["name"] = name
@@ -73,7 +70,6 @@ class Result(object):
                     for card in card_container[1:]:
                         data_cj = {}
                         name = card.find_all("p")[1].text.strip()
-                        # print(name)
                         jerk1 = card.find_all("p")[6].strong.contents[0]
                         jerk2 = card.find_all("p")[7].strong.contents[0]
                         jerk3 = card.find_all("p")[8].strong.contents[0]
@@ -112,5 +108,7 @@ class Result(object):
 
         return list(merged_result.values())
 
-    def get_results(self):
-        return
+    def get_results(self, search_url=None):
+        result = self._scrape_result_info(self._load_result_page(search_url))
+        if result:
+            return result
