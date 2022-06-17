@@ -10,7 +10,7 @@ A pip library to scrape filtered events and results from the IWF (International 
 
 ### Usage:
 
-To install, type:
+To import, type:
 
 ```
 import iwf
@@ -30,7 +30,7 @@ for event in client.get_events():
 or
 
 ```
-print(Event().get_events(year='2018', new_or_old="new", age_group='Youth'))
+print(client.get_events(year='2018', new_or_old="new", age_group='Youth'))
 ```
 
 to get the following results:
@@ -65,12 +65,15 @@ to get the following results:
 ```
 
 To get results for an event, use the following method with an url:
+
 ```
 url = "https://iwf.sport/results/results-by-events/?event_id=486"
 result = client.get_results(search_url=url)
 print(result)
 ```
+
 and you will get:
+
 ```
 [{'birthdate': 'Apr 02, 2003',
   'bodyweight': '48.88',
@@ -135,6 +138,8 @@ pip install -i https://test.pypi.org/simple/ iwf-api-jwc20
 
 ### Requirements:
 
-- beautifulsoup4==4.11.1
-- lxml==4.9.0
-- requests==2.27.1
+Make sure to install the requirements before running the app.
+
+- beautifulsoup4
+- lxml
+- requests
