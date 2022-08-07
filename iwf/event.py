@@ -1,5 +1,8 @@
-from .core import *
-import json
+import requests
+
+from bs4 import BeautifulSoup
+
+from .core import eBase, eHeaders, eEvents, is_event
 
 
 class Event(object):
@@ -15,25 +18,24 @@ class Event(object):
         age_group=None,
     ):
 
-        search_url = ""
         filters = []
         if new_or_old == "old":
-            search_url = BASE_URL + OLD_BW_EVENTS_URL
+            search_url = eBase.URL + eEvents.OLD_BW_URL
         else:
-            search_url = BASE_URL + EVENTS_URL
+            search_url = eBase.URL + eEvents.URL
 
         # TODO: Combine years results with other filters
         if year:
-            search_url += YEAR_URL + year
+            search_url += eEvents.YEAR_URL + year
         else:
             if event_type:
                 if " " in event_type:
                     event_type_new = event_type.replace(" ", "+")
-                    filters.append(EVENT_TYPE_URL + event_type_new)
+                    filters.append(eEvents.TYPE_URL + event_type_new)
             if age_group:
-                filters.append(EVENT_AGE_URL + age_group)
+                filters.append(eEvents.AGE_URL + age_group)
             if nation:
-                filters.append(EVENT_NATION_URL + nation)
+                filters.append(eEvents.NATION_URL + nation)
 
         if len(filters) >= 1:
             search_url += "/?" + filters[0]
@@ -53,7 +55,7 @@ class Event(object):
     ):
 
         if search_url and is_event(search_url):
-            r = requests.get(search_url, headers=HEADERS)
+            r = requests.get(search_url, headers=eHeaders.PAYLOAD)
         else:
             new_url = self._craft_url(
                 new_or_old,
@@ -62,7 +64,7 @@ class Event(object):
                 event_type,
                 age_group,
             )
-            r = requests.get(new_url, headers=HEADERS)
+            r = requests.get(new_url, headers=eHeaders.PAYLOAD)
 
         html = r.text
         return BeautifulSoup(html, "lxml")

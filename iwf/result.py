@@ -1,7 +1,8 @@
-from heapq import merge
-from unicodedata import category
-from .core import *
-import json
+import requests
+
+from bs4 import BeautifulSoup
+
+from .core import eHeaders
 
 
 class Result(object):
@@ -9,7 +10,7 @@ class Result(object):
         self.keywords = keywords
 
     def _load_result_page(self, search_url):
-        r = requests.get(search_url, headers=HEADERS)
+        r = requests.get(search_url, headers=eHeaders.PAYLOAD)
         html = r.text
         return BeautifulSoup(html, "lxml")
 
