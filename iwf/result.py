@@ -121,13 +121,15 @@ class Result(object):
             return True, final_table
         return False, []
 
-    def get_results(self, event_url, old_bw=False) -> Union[list[dict], None]:
+    def get_results(self, event_url) -> Union[list[dict], False]:
         """Fetches competition data using the result_url"""
-        page_data = self._load_events_page(event_url, old_bw_cat=old_bw)
+        page_data = self._load_events_page(event_url)
         success, data = self._scrape_result_info(page_data)
         if success:
-            return data[0]  # todo: not being returned every time
-        elif not success and not old_bw:
-            self.get_results(event_url, True)
-        elif not success and old_bw:
-            print(f"NO RECORD FOUND: {event_url}")
+            return data
+        elif not success:
+            page_data = self._load_events_page(event_url, old_bw_cat=True)
+            success, data = self._scrape_result_info(page_data)
+            if success:
+                return data
+        return False
