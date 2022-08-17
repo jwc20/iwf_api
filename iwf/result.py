@@ -121,8 +121,13 @@ class Result(object):
             return True, final_table
         return False, []
 
-    def get_results(self, event_url) -> Union[list[dict], False]:
-        """Fetches competition data using the result_url"""
+    def get_results(self, event_url) -> Union[list[dict], bool]:
+        """Fetches competition data using the result_url
+
+        Example:
+            client.get_results("?event_id=96")
+        >>> [{'lifter': "Dave", "snatch_1": 123, 'etc':'...'}]
+        """
         page_data = self._load_events_page(event_url)
         success, data = self._scrape_result_info(page_data)
         if success:
