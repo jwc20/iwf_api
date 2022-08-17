@@ -6,7 +6,7 @@ from .result import Result
 class Iwf(Event, Result):
     def __init__(self, keywords=[], *args):
         Event.__init__(self, keywords=keywords, *args)
-        Result.__init__(self, keywords=keywords, *args)
+        Result.__init__(self)
 
 
 __version__ = "0.0.1"
