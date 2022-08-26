@@ -10,6 +10,6 @@ class Iwf(Event, Result):
 
 
 __version__ = "0.0.1"
-__authors__ = ["jwc20"]
+__authors__ = ["jwc20", "euanwm"]
 __source__ = "https://github.com/jwc20/iwf-api/"
 __license__ = "MIT"
