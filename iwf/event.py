@@ -102,3 +102,35 @@ class Event(object):
         )
         if result_data:
             return result_data
+
+
+    # Temporarily fetch years
+    # TODO: Figure out using the functions in core.py
+
+    def _scrape_select_years(self, page):
+        """
+        Scrapes data for new or old bodyweight page
+        """
+        select_option = page.findAll("select", {"name": "event_year"})[0]
+        options = select_option.findAll("option")
+        years = []
+        for item in options:
+            years.append(item.get_text())
+
+        return years
+
+    def _load_old_bodyweight_events_page(self):
+        """
+        Loads the page for new bodyweight category
+        """
+        r = requests.get(eBase.URL + eEvents.OLD_BW_URL, headers=eHeaders.PAYLOAD)
+        html = r.text
+        return BeautifulSoup(html, "lxml")
+
+    def get_years(self):
+        """
+        Gets all years available.
+        New bodyweight years not needed since old bodyweight <select> includes them
+        """
+        old_events_years = self._scrape_select_years(self._load_old_bodyweight_events_page())
+        return old_events_years
