@@ -48,9 +48,15 @@ class Result(object):
                             )
                             bodyweight = card.find_all("p")[4].text.strip().split()[1]
                             group = card.find_all("p")[5].text.strip().split()[1]
-                            snatch1 = card.find_all("p")[6].strong.contents[0]
-                            snatch2 = card.find_all("p")[7].strong.contents[0]
-                            snatch3 = card.find_all("p")[8].strong.contents[0]
+                            snatch1_tag = card.find_all("p")[6].strong.contents[0]
+                            snatch1 = snatch1_tag if isinstance(snatch1_tag, str) else str(snatch1_tag)
+
+                            snatch2_tag = card.find_all("p")[7].strong.contents[0]
+                            snatch2 = snatch2_tag if isinstance(snatch2_tag, str) else str(snatch2_tag)
+
+                            snatch3_tag = card.find_all("p")[8].strong.contents[0]
+                            snatch3 = snatch3_tag if isinstance(snatch3_tag, str) else str(snatch3_tag)
+
                             snatch = card.find_all("p")[9].strong.contents[1]
                             rank_sn = card.find_all("p")[0].text.strip().split()[1]
 
@@ -81,9 +87,15 @@ class Result(object):
                         for card in card_container[1:]:
                             data_cj = {}
                             name = card.find_all("p")[1].text.strip()
-                            jerk1 = card.find_all("p")[6].strong.contents[0]
-                            jerk2 = card.find_all("p")[7].strong.contents[0]
-                            jerk3 = card.find_all("p")[8].strong.contents[0]
+                            jerk1_tag = card.find_all("p")[6].strong.contents[0]
+                            jerk1 = jerk1_tag if isinstance(jerk1_tag, str) else str(jerk1_tag)
+
+                            jerk2_tag = card.find_all("p")[7].strong.contents[0]
+                            jerk2 = jerk2_tag if isinstance(jerk2_tag, str) else str(jerk2_tag)
+
+                            jerk3_tag = card.find_all("p")[8].strong.contents[0]
+                            jerk3 = jerk3_tag if isinstance(jerk3_tag, str) else str(jerk3_tag)
+
                             jerk = card.find_all("p")[9].strong.contents[1]
                             rank_cj = card.find_all("p")[0].text.strip().split()[1]
 
