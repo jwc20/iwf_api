@@ -15,8 +15,6 @@ class Result(object):
     @staticmethod
     def _load_events_page(events_url, old_bw_cat=False) -> BeautifulSoup:
         """Loads the event page for the competition, need to manually specify if it's old weight cats"""
-        
-
 
         target_url = urljoin(eBase.URL, eEvents.URL.value + events_url)
         if old_bw_cat:
@@ -24,13 +22,13 @@ class Result(object):
 
         timeout = 55
 
-        try: 
+        try:
             r = requests.get(target_url, headers=eHeaders.PAYLOAD, timeout=timeout)
 
-        except requests.Timeout: 
+        except requests.Timeout:
             print(f"Timeout error: Request to {url} timed out after {timeout} seconds.")
 
-        except requests.HTTPError as e: 
+        except requests.HTTPError as e:
             print(f"HTTP error occurred: {e}")
 
         except requests.RequestException as e:
@@ -47,8 +45,8 @@ class Result(object):
             result = []
             for div_id in result_container:
                 if (
-                        div_id.get("id") == "men_snatchjerk"
-                        or div_id.get("id") == "women_snatchjerk"
+                    div_id.get("id") == "men_snatchjerk"
+                    or div_id.get("id") == "women_snatchjerk"
                 ):
 
                     cards_container = div_id.find_all("div", {"class": "cards"})
@@ -64,23 +62,39 @@ class Result(object):
                                 card.find_all("p")[3].text.strip().split()[1:]
                             )
                             bodyweight = card.find_all("p")[4].text.strip().split()[1]
-                            
+
                             if len(card.find_all("p")[5].text.strip().split()) < 2:
                                 group = ""
                             else:
                                 group = card.find_all("p")[5].text.strip().split()[1]
 
                             snatch1_tag = card.find_all("p")[6].strong.contents[0]
-                            snatch1 = snatch1_tag if isinstance(snatch1_tag, str) else str(snatch1_tag)
+                            snatch1 = (
+                                snatch1_tag
+                                if isinstance(snatch1_tag, str)
+                                else str(snatch1_tag)
+                            )
 
                             snatch2_tag = card.find_all("p")[7].strong.contents[0]
-                            snatch2 = snatch2_tag if isinstance(snatch2_tag, str) else str(snatch2_tag)
+                            snatch2 = (
+                                snatch2_tag
+                                if isinstance(snatch2_tag, str)
+                                else str(snatch2_tag)
+                            )
 
                             snatch3_tag = card.find_all("p")[8].strong.contents[0]
-                            snatch3 = snatch3_tag if isinstance(snatch3_tag, str) else str(snatch3_tag)
+                            snatch3 = (
+                                snatch3_tag
+                                if isinstance(snatch3_tag, str)
+                                else str(snatch3_tag)
+                            )
 
                             snatch = card.find_all("p")[9].strong.contents[1]
-                            rank_sn = card.find_all("p")[0].text.strip().split()[1]
+
+                            if len(card.find_all("p")[0].text.strip().split()) < 2:
+                                rank_sn = ""
+                            else:
+                                rank_sn = card.find_all("p")[0].text.strip().split()[1]
 
                             category = (
                                 card.parent.previous_sibling.previous_sibling.previous_sibling.previous_sibling.text.strip()
@@ -110,16 +124,32 @@ class Result(object):
                             data_cj = {}
                             name = card.find_all("p")[1].text.strip()
                             jerk1_tag = card.find_all("p")[6].strong.contents[0]
-                            jerk1 = jerk1_tag if isinstance(jerk1_tag, str) else str(jerk1_tag)
+                            jerk1 = (
+                                jerk1_tag
+                                if isinstance(jerk1_tag, str)
+                                else str(jerk1_tag)
+                            )
 
                             jerk2_tag = card.find_all("p")[7].strong.contents[0]
-                            jerk2 = jerk2_tag if isinstance(jerk2_tag, str) else str(jerk2_tag)
+                            jerk2 = (
+                                jerk2_tag
+                                if isinstance(jerk2_tag, str)
+                                else str(jerk2_tag)
+                            )
 
                             jerk3_tag = card.find_all("p")[8].strong.contents[0]
-                            jerk3 = jerk3_tag if isinstance(jerk3_tag, str) else str(jerk3_tag)
+                            jerk3 = (
+                                jerk3_tag
+                                if isinstance(jerk3_tag, str)
+                                else str(jerk3_tag)
+                            )
 
                             jerk = card.find_all("p")[9].strong.contents[1]
-                            rank_cj = card.find_all("p")[0].text.strip().split()[1]
+
+                            if len(card.find_all("p")[0].text.strip().split()) < 2:
+                                rank_cj = ""
+                            else:
+                                rank_cj = card.find_all("p")[0].text.strip().split()[1]
                             print(name, rank_cj)
 
                             if name and jerk:
@@ -156,7 +186,6 @@ class Result(object):
             return True, final_table
         return False, []
 
-
     def get_results(self, event_url) -> Union[list[dict], bool]:
         """Fetches competition data using the result_url
 
@@ -173,8 +202,8 @@ class Result(object):
             success, data = self._scrape_result_info(page_data)
             if success:
                 # TODO: Add time estimate to scrape all pages
-                start_time = time.time() 
-                # num_pages = 
+                start_time = time.time()
+                # num_pages =
 
                 time.sleep(5)
                 return data
