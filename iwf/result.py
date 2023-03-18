@@ -47,7 +47,12 @@ class Result(object):
                                 card.find_all("p")[3].text.strip().split()[1:]
                             )
                             bodyweight = card.find_all("p")[4].text.strip().split()[1]
-                            group = card.find_all("p")[5].text.strip().split()[1]
+                            
+                            if len(card.find_all("p")[5].text.strip().split()) < 2:
+                                group = ""
+                            else:
+                                group = card.find_all("p")[5].text.strip().split()[1]
+
                             snatch1_tag = card.find_all("p")[6].strong.contents[0]
                             snatch1 = snatch1_tag if isinstance(snatch1_tag, str) else str(snatch1_tag)
 
@@ -132,6 +137,7 @@ class Result(object):
             final_table = list(merged_result.values())
             return True, final_table
         return False, []
+
 
     def get_results(self, event_url) -> Union[list[dict], bool]:
         """Fetches competition data using the result_url
