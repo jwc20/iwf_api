@@ -150,7 +150,6 @@ class Result(object):
                                 rank_cj = ""
                             else:
                                 rank_cj = card.find_all("p")[0].text.strip().split()[1]
-                            print(name, rank_cj)
 
                             if name and jerk:
                                 data_cj["name"] = name
