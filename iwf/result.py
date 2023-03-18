@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 
 import requests
 import time
+import logging
 from bs4 import BeautifulSoup
 
 from .core import eHeaders, eEvents, eBase
@@ -16,23 +17,30 @@ class Result(object):
     def _load_events_page(events_url, old_bw_cat=False) -> BeautifulSoup:
         """Loads the event page for the competition, need to manually specify if it's old weight cats"""
 
+        # Build url
         target_url = urljoin(eBase.URL, eEvents.URL.value + events_url)
         if old_bw_cat:
             target_url = urljoin(eBase.URL, eEvents.OLD_BW_URL.value + events_url)
 
-        timeout = 55
+        MAX_RETRIES = 5
 
-        try:
-            r = requests.get(target_url, headers=eHeaders.PAYLOAD, timeout=timeout)
+        logging.basicConfig(filename="scraper.log", level=logging.ERROR)
 
-        except requests.Timeout:
-            print(f"Timeout error: Request to {url} timed out after {timeout} seconds.")
-
-        except requests.HTTPError as e:
-            print(f"HTTP error occurred: {e}")
-
-        except requests.RequestException as e:
-            print(f"An error occurred while fetching data: {e}")
+        for i in range(MAX_RETRIES):
+            try:
+                r = requests.get(target_url, headers=eHeaders.PAYLOAD)
+                break
+    
+            # except requests.Timeout:
+            #     print(f"Timeout error: Request to {url} timed out after {timeout} seconds.")
+    
+            # except requests.HTTPError as e:
+            #     print(f"HTTP error occurred: {e}")
+    
+            except requests.exceptions.RequestException as e:
+                print(f"An error occurred while fetching data: {e}, attempt number: ", i)
+                if i == MAX_RETRIES - 1: 
+                    logging.error(f"Error occurred: {e}")
 
         html = r.text
         return BeautifulSoup(html, "lxml")
