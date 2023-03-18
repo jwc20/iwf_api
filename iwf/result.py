@@ -2,7 +2,7 @@ from typing import Union
 from urllib.parse import urljoin
 
 import requests
-
+import time
 from bs4 import BeautifulSoup
 
 from .core import eHeaders, eEvents, eBase
@@ -15,10 +15,27 @@ class Result(object):
     @staticmethod
     def _load_events_page(events_url, old_bw_cat=False) -> BeautifulSoup:
         """Loads the event page for the competition, need to manually specify if it's old weight cats"""
+        
+
+
         target_url = urljoin(eBase.URL, eEvents.URL.value + events_url)
         if old_bw_cat:
             target_url = urljoin(eBase.URL, eEvents.OLD_BW_URL.value + events_url)
-        r = requests.get(target_url, headers=eHeaders.PAYLOAD)
+
+        timeout = 55
+
+        try: 
+            r = requests.get(target_url, headers=eHeaders.PAYLOAD, timeout=timeout)
+
+        except requests.Timeout: 
+            print(f"Timeout error: Request to {url} timed out after {timeout} seconds.")
+
+        except requests.HTTPError as e: 
+            print(f"HTTP error occurred: {e}")
+
+        except requests.RequestException as e:
+            print(f"An error occurred while fetching data: {e}")
+
         html = r.text
         return BeautifulSoup(html, "lxml")
 
@@ -103,6 +120,7 @@ class Result(object):
 
                             jerk = card.find_all("p")[9].strong.contents[1]
                             rank_cj = card.find_all("p")[0].text.strip().split()[1]
+                            print(name, rank_cj)
 
                             if name and jerk:
                                 data_cj["name"] = name
@@ -154,5 +172,10 @@ class Result(object):
             page_data = self._load_events_page(event_url, old_bw_cat=True)
             success, data = self._scrape_result_info(page_data)
             if success:
+                # TODO: Add time estimate to scrape all pages
+                start_time = time.time() 
+                # num_pages = 
+
+                time.sleep(5)
                 return data
         return False
