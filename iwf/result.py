@@ -22,7 +22,7 @@ class Result(object):
         if old_bw_cat:
             target_url = urljoin(eBase.URL, eEvents.OLD_BW_URL.value + events_url)
 
-        MAX_RETRIES = 5
+        MAX_RETRIES = 10
 
         logging.basicConfig(filename="scraper.log", level=logging.ERROR)
 
@@ -31,11 +31,11 @@ class Result(object):
                 r = requests.get(target_url, headers=eHeaders.PAYLOAD)
                 break
     
-            # except requests.Timeout:
-            #     print(f"Timeout error: Request to {url} timed out after {timeout} seconds.")
+            except requests.Timeout:
+                print(f"Timeout error: Request to {url} timed out after {timeout} seconds.")
     
-            # except requests.HTTPError as e:
-            #     print(f"HTTP error occurred: {e}")
+            except requests.HTTPError as e:
+                print(f"HTTP error occurred: {e}")
     
             except requests.exceptions.RequestException as e:
                 print(f"An error occurred while fetching data: {e}, attempt number: ", i)
