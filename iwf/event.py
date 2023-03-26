@@ -81,7 +81,18 @@ class Event(object):
             }
             data["name"] = card.find("span", {"class": "text"}).string
             # data["result_url"] = card["href"]
-            data["result_url"] = f"{self.server_url}/{card['href']}"
+            data["result_url"] = (
+                self._craft_url(
+                    new_or_old,
+                    year,
+                    nation,
+                    event_type,
+                    age_group,
+                )
+                + "/"
+                + card["href"]
+            )
+
             data["location"] = card.find("strong").string
             data["date"] = card.find("p", {"class": "normal__text"}).string.strip()
             result.append(data)
