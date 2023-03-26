@@ -67,11 +67,11 @@ class Event(object):
             r = requests.get(new_url, headers=eHeaders.PAYLOAD)
 
         html = r.text
-        return BeautifulSoup(html, "lxml")
+        return ( new_url, BeautifulSoup(html, "lxml"))
 
     def _scrape_event_info(self, soup_data):
         result = []
-        cards = soup_data.findAll("a", {"class": "card"})
+        cards = soup_data[1].findAll("a", {"class": "card"})
         for card in cards:
             data = {
                 "name": None,  # string
@@ -81,18 +81,7 @@ class Event(object):
             }
             data["name"] = card.find("span", {"class": "text"}).string
             # data["result_url"] = card["href"]
-            data["result_url"] = (
-                self._craft_url(
-                    new_or_old,
-                    year,
-                    nation,
-                    event_type,
-                    age_group,
-                )
-                + "/"
-                + card["href"]
-            )
-
+            data["result_url"] = soup_data[0] + "/" + card["href"]
             data["location"] = card.find("strong").string
             data["date"] = card.find("p", {"class": "normal__text"}).string.strip()
             result.append(data)
