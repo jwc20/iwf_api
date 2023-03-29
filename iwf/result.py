@@ -13,6 +13,67 @@ import re
 from pprintpp import pprint
 
 
+def update_rank_sn_by_category(final_table):
+    # Group the final table by category
+    categories = {}
+    for entry in final_table:
+        category = entry["category"]
+        if category not in categories:
+            categories[category] = []
+        categories[category].append(entry)
+
+    # Sort each category based on snatch values and bodyweight, considering only valid entries
+    for category, athletes in categories.items():
+        sorted_athletes = sorted(
+            [entry for entry in athletes if entry["snatch"] != "---"],
+            key=lambda x: (float(x["snatch"]), float(x["bodyweight"])),
+            reverse=True,
+        )
+
+        # Update the rank_sn values based on the sorted list for each category
+        for index, entry in enumerate(sorted_athletes, start=1):
+            entry["rank_sn"] = str(index)
+
+        # Update the original final_table with the new rank_sn values
+        for sorted_entry in sorted_athletes:
+            for original_entry in final_table:
+                if sorted_entry["name"] == original_entry["name"]:
+                    original_entry["rank_sn"] = sorted_entry["rank_sn"]
+                    break
+
+    return final_table
+
+
+def update_rank_cj_by_category(final_table):
+    # Group the final table by category
+    categories = {}
+    for entry in final_table:
+        category = entry["category"]
+        if category not in categories:
+            categories[category] = []
+        categories[category].append(entry)
+
+    # Sort each category based on clean & jerk values and bodyweight, considering only valid entries
+    for category, athletes in categories.items():
+        sorted_athletes = sorted(
+            [entry for entry in athletes if entry["jerk"] != "---"],
+            key=lambda x: (float(x["jerk"]), float(x["bodyweight"])),
+            reverse=True,
+        )
+
+        # Update the rank_cj values based on the sorted list for each category
+        for index, entry in enumerate(sorted_athletes, start=1):
+            entry["rank_cj"] = str(index)
+
+        # Update the original final_table with the new rank_cj values
+        for sorted_entry in sorted_athletes:
+            for original_entry in final_table:
+                if sorted_entry["name"] == original_entry["name"]:
+                    original_entry["rank_cj"] = sorted_entry["rank_cj"]
+                    break
+    return final_table
+
+
 class Result(object):
     def __init__(self):
         pass
@@ -213,6 +274,9 @@ class Result(object):
                 data["first_name"] = first_name
                 data["last_name"] = last_name
 
+            final_table = update_rank_sn_by_category(final_table)
+            final_table = update_rank_cj_by_category(final_table)
+
             return True, final_table
         return False, []
 
@@ -231,10 +295,7 @@ class Result(object):
             page_data = self._load_events_page(event_url, old_bw_cat=True)
             success, data = self._scrape_result_info(page_data)
             if success:
-                # TODO: Add time estimate to scrape all pages
                 start_time = time.time()
-                # num_pages =
-
                 time.sleep(5)
                 return data
         return False
