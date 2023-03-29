@@ -8,6 +8,10 @@ from bs4 import BeautifulSoup
 
 from .core import eHeaders, eEvents, eBase
 
+import re
+
+from pprintpp import pprint
+
 
 class Result(object):
     def __init__(self):
@@ -30,16 +34,20 @@ class Result(object):
             try:
                 r = requests.get(target_url, headers=eHeaders.PAYLOAD)
                 break
-    
+
             except requests.Timeout:
-                print(f"Timeout error: Request to {url} timed out after {timeout} seconds.")
-    
+                print(
+                    f"Timeout error: Request to {url} timed out after {timeout} seconds."
+                )
+
             except requests.HTTPError as e:
                 print(f"HTTP error occurred: {e}")
-    
+
             except requests.exceptions.RequestException as e:
-                print(f"An error occurred while fetching data: {e}, attempt number: ", i)
-                if i == MAX_RETRIES - 1: 
+                print(
+                    f"An error occurred while fetching data: {e}, attempt number: ", i
+                )
+                if i == MAX_RETRIES - 1:
                     logging.error(f"Error occurred: {e}")
 
         html = r.text
@@ -190,6 +198,21 @@ class Result(object):
                 merged_result.setdefault(key, {}).update(r)
 
             final_table = list(merged_result.values())
+
+            for data in final_table:
+                full_name = data["name"]
+                words = full_name.split()
+                for i, word in enumerate(words):
+                    if i == 0:
+                        last_name = word
+                    elif word[0].isupper() and not word.isupper():
+                        first_name = " ".join(words[i:])
+                        break
+                    else:
+                        last_name += " " + word
+                data["first_name"] = first_name
+                data["last_name"] = last_name
+
             return True, final_table
         return False, []
 
