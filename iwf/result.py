@@ -266,13 +266,14 @@ class Result(object):
                 for i, word in enumerate(words):
                     if i == 0:
                         last_name = word
+                        data["last_name"] = last_name
                     elif word[0].isupper() and not word.isupper():
                         first_name = " ".join(words[i:])
+                        data["first_name"] = first_name
                         break
                     else:
                         last_name += " " + word
-                data["first_name"] = first_name
-                data["last_name"] = last_name
+                        data["last_name"] = last_name
 
             final_table = update_rank_sn_by_category(final_table)
             final_table = update_rank_cj_by_category(final_table)
