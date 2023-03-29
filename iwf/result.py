@@ -26,7 +26,7 @@ def update_rank_sn_by_category(final_table):
     for category, athletes in categories.items():
         sorted_athletes = sorted(
             [entry for entry in athletes if entry["snatch"] != "---"],
-            key=lambda x: (float(x["snatch"]), float(x["bodyweight"])),
+            key=lambda x: (float(x["snatch"]), -float(x["bodyweight"])),
             reverse=True,
         )
 
@@ -57,7 +57,7 @@ def update_rank_cj_by_category(final_table):
     for category, athletes in categories.items():
         sorted_athletes = sorted(
             [entry for entry in athletes if entry["jerk"] != "---"],
-            key=lambda x: (float(x["jerk"]), float(x["bodyweight"])),
+            key=lambda x: (float(x["jerk"]), -float(x["bodyweight"])),
             reverse=True,
         )
 
